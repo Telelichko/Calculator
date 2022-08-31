@@ -1,0 +1,14 @@
+program ProjectCalculator;
+
+uses
+  Forms,
+  Calculator in 'Calculator.pas' {FormCalculator},
+  Unit1 in 'Unit1.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TFormCalculator, FormCalculator);
+  Application.Run;
+end.

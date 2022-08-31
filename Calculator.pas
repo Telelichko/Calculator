@@ -1,0 +1,252 @@
+unit Calculator;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls, RegExpr, Clipbrd;
+
+type
+  TFormCalculator = class(TForm)
+    Panel1: TPanel;
+    Btn1: TButton;
+    Btn2: TButton;
+    Btn3: TButton;
+    BtnPlus: TButton;
+    Btn4: TButton;
+    Btn5: TButton;
+    Btn6: TButton;
+    BtnMinus: TButton;
+    BtnMultiply: TButton;
+    Btn9: TButton;
+    Btn8: TButton;
+    Btn7: TButton;
+    Btn0: TButton;
+    BtnComma: TButton;
+    BtnEqual: TButton;
+    BtnDivide: TButton;
+    LabelActions: TLabel;
+    LabelInfo: TLabel;
+    BtnClearAll: TButton;
+    BtnClear1: TButton;
+    procedure Btn1Click(Sender: TObject);
+    procedure Btn2Click(Sender: TObject);
+    procedure Btn3Click(Sender: TObject);
+    procedure Btn4Click(Sender: TObject);
+    procedure Btn5Click(Sender: TObject);
+    procedure Btn6Click(Sender: TObject); 
+    procedure Btn7Click(Sender: TObject);
+    procedure Btn8Click(Sender: TObject);
+    procedure Btn9Click(Sender: TObject);
+    procedure Btn0Click(Sender: TObject);    
+    procedure BtnCommaClick(Sender: TObject);
+    procedure BtnPlusClick(Sender: TObject);
+    procedure BtnMinusClick(Sender: TObject);
+    procedure BtnMultiplyClick(Sender: TObject);
+    procedure BtnDivideClick(Sender: TObject);
+    procedure BtnClear1Click(Sender: TObject);
+    procedure BtnClearAllClick(Sender: TObject);
+    procedure BtnEqualClick(Sender: TObject);
+  private
+    procedure ChangeLabelsTextsByDigits(Symbol: Integer);
+    procedure ChangeLabelsTextsByOperationSymbols(Symbol: String);
+    procedure DeleteOperatorInEndOfLabelActions();
+  public
+    ValueResult: Real;
+  end;
+
+var
+  FormCalculator: TFormCalculator;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFormCalculator.Btn1Click(Sender: TObject);
+begin
+  ChangeLabelsTextsByDigits(1);
+end;
+
+procedure TFormCalculator.Btn2Click(Sender: TObject);
+begin
+  ChangeLabelsTextsByDigits(2);
+end;  
+
+procedure TFormCalculator.Btn3Click(Sender: TObject);
+begin
+  ChangeLabelsTextsByDigits(3);
+end;
+
+procedure TFormCalculator.Btn4Click(Sender: TObject);
+begin
+  ChangeLabelsTextsByDigits(4);
+end;
+
+procedure TFormCalculator.Btn5Click(Sender: TObject);
+begin
+  ChangeLabelsTextsByDigits(5);
+end;
+
+procedure TFormCalculator.Btn6Click(Sender: TObject);
+begin
+  ChangeLabelsTextsByDigits(6);
+end; 
+
+procedure TFormCalculator.Btn7Click(Sender: TObject);
+begin
+  ChangeLabelsTextsByDigits(7);
+end;
+
+procedure TFormCalculator.Btn8Click(Sender: TObject);
+begin
+  ChangeLabelsTextsByDigits(8);
+end;
+
+procedure TFormCalculator.Btn9Click(Sender: TObject);
+begin
+  ChangeLabelsTextsByDigits(9);
+end;
+
+procedure TFormCalculator.Btn0Click(Sender: TObject);
+begin
+  ChangeLabelsTextsByDigits(0);
+end;
+
+procedure TFormCalculator.BtnCommaClick(Sender: TObject);
+begin
+  if LabelInfo.Caption = IntToStr(0) then
+  begin
+    LabelActions.Caption := IntToStr(0);
+  end;
+
+  LabelInfo.Caption := LabelInfo.Caption + ',';
+  LabelActions.Caption := LabelActions.Caption + ',';
+end;
+
+procedure TFormCalculator.BtnPlusClick(Sender: TObject);
+begin
+  ChangeLabelsTextsByOperationSymbols('+');
+end; 
+
+procedure TFormCalculator.BtnMinusClick(Sender: TObject);
+begin
+  ChangeLabelsTextsByOperationSymbols('-');
+end;
+
+procedure TFormCalculator.BtnMultiplyClick(Sender: TObject);
+begin
+  ChangeLabelsTextsByOperationSymbols('*');
+end;
+
+procedure TFormCalculator.BtnDivideClick(Sender: TObject);
+begin
+  ChangeLabelsTextsByOperationSymbols('/');
+end;
+
+procedure TFormCalculator.BtnClear1Click(Sender: TObject);
+begin       
+  LabelInfo.Caption := copy(LabelInfo.Caption,0,length(trim(LabelInfo.Caption))-1);
+  LabelActions.Caption := copy(LabelActions.Caption,0,length(trim(LabelActions.Caption))-1);
+  
+  if LabelInfo.Caption = '' then
+  begin
+    LabelInfo.Caption := IntToStr(0);
+  end;
+end;
+
+procedure TFormCalculator.BtnClearAllClick(Sender: TObject);
+begin
+  LabelInfo.Caption := IntToStr(0);
+  LabelActions.Caption := '';
+end;
+
+procedure TFormCalculator.BtnEqualClick(Sender: TObject);
+var
+  regexpNumbers: TRegExpr;
+  regexpOperators: TRegExpr;
+  digitsAndOperations : String;
+  operatorsStr: String;
+  id : Integer;
+  countNumbers: Integer;
+  arrNumbers: Array of Real;
+begin
+  DeleteOperatorInEndOfLabelActions();
+
+  digitsAndOperations := LabelActions.Caption;
+  regexpOperators := TRegExpr.Create;
+  regexpOperators.Expression := '[+]|[-]|[*]|[\/]';
+
+  operatorsStr := '';
+  if regexpOperators.Exec(digitsAndOperations) then
+  repeat
+    operatorsStr := operatorsStr + regexpOperators.Match[0];
+  until not regexpOperators.ExecNext;
+
+  countNumbers := Length(OperatorsStr) + 1;
+  setLength(ArrNumbers, CountNumbers);
+
+  regexpNumbers := TRegExpr.Create;
+  regexpNumbers.Expression := '[0-9,]+';
+
+  id := 0;
+  if regexpNumbers.Exec(digitsAndOperations) then
+  repeat
+    arrNumbers[Id] := StrToFloat(regexpNumbers.Match[0]);
+    id := id + 1;
+  until not regexpNumbers.ExecNext;
+
+  valueResult := arrNumbers[0];
+  if Length(operatorsStr) > 0 then
+    for Id := 0 to (Length(ArrNumbers) - 1) do
+    begin
+      case operatorsStr[id+1] of
+      '+': ValueResult := ValueResult + ArrNumbers[id + 1];
+      '-': ValueResult := ValueResult - ArrNumbers[id + 1];
+      '*': ValueResult := ValueResult * ArrNumbers[id + 1];
+      '/': ValueResult := ValueResult / ArrNumbers[id + 1];
+      end;
+    end;
+
+  LabelInfo.Caption := FloatToStr(valueResult);
+end;
+
+procedure TFormCalculator.ChangeLabelsTextsByDigits(Symbol: Integer);
+begin
+  if LabelInfo.Caption = IntToStr(0) then
+  begin
+    LabelInfo.Caption := '';
+  end;
+
+  LabelInfo.Caption := LabelInfo.Caption + IntToStr(Symbol);
+  LabelActions.Caption := LabelActions.Caption + IntToStr(Symbol);
+end;
+
+procedure TFormCalculator.ChangeLabelsTextsByOperationSymbols(Symbol: String);
+begin
+  if LabelInfo.Caption = IntToStr(0) then
+  begin
+    LabelActions.Caption := IntToStr(0);
+  end;
+
+  DeleteOperatorInEndOfLabelActions();
+
+  LabelInfo.Caption := '';
+  LabelActions.Caption := LabelActions.Caption + Symbol;
+end;
+
+procedure TFormCalculator.DeleteOperatorInEndOfLabelActions();
+var
+  lastSymbol : String;
+  labelActionsStr: String;
+begin
+  labelActionsStr := LabelActions.Caption;
+  lastSymbol := LabelActions.Caption[Length(LabelActions.Caption)];
+
+  if (lastSymbol = '+') or (lastSymbol = '-') or (lastSymbol = '*') or
+     (lastSymbol = '/') then
+  begin
+    LabelActions.Caption := copy(LabelActions.Caption,0,length(trim(LabelActions.Caption))-1);
+  end;
+end;
+
+end.
