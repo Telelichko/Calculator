@@ -1,9 +1,10 @@
 object FormCalculator: TFormCalculator
-  Left = 166
-  Top = 175
-  Width = 320
-  Height = 499
+  Left = 135
+  Top = 176
+  BorderStyle = bsSingle
   Caption = 'Calculator'
+  ClientHeight = 450
+  ClientWidth = 304
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -203,7 +204,7 @@ object FormCalculator: TFormCalculator
       Top = 315
       Width = 50
       Height = 50
-      Caption = '.'
+      Caption = ','
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -19

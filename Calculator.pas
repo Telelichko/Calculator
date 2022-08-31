@@ -223,7 +223,7 @@ end;
 
 procedure TFormCalculator.ChangeLabelsTextsByOperationSymbols(Symbol: String);
 begin
-  if LabelInfo.Caption = IntToStr(0) then
+  if (LabelActions.Caption = '') and (LabelInfo.Caption = IntToStr(0)) then
   begin
     LabelActions.Caption := IntToStr(0);
   end;

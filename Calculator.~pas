@@ -162,52 +162,52 @@ end;
 
 procedure TFormCalculator.BtnEqualClick(Sender: TObject);
 var
-  RegexpNumbers: TRegExpr;
-  RegexpOperators: TRegExpr;
-  DigitsAndOperations : String;  
-  OperatorsStr: String; 
-  Id : Integer;
-  CountNumbers: Integer;
-  ArrNumbers: Array of Real;
+  regexpNumbers: TRegExpr;
+  regexpOperators: TRegExpr;
+  digitsAndOperations : String;
+  operatorsStr: String;
+  id : Integer;
+  countNumbers: Integer;
+  arrNumbers: Array of Real;
 begin
   DeleteOperatorInEndOfLabelActions();
 
-  DigitsAndOperations := LabelActions.Caption;
-  RegexpOperators := TRegExpr.Create;
-  RegexpOperators.Expression := '[+]|[-]|[*]|[\/]';
+  digitsAndOperations := LabelActions.Caption;
+  regexpOperators := TRegExpr.Create;
+  regexpOperators.Expression := '[+]|[-]|[*]|[\/]';
 
-  OperatorsStr := '';
-  if RegexpOperators.Exec(DigitsAndOperations) then
+  operatorsStr := '';
+  if regexpOperators.Exec(digitsAndOperations) then
   repeat
-    OperatorsStr := OperatorsStr + RegexpOperators.Match[0];
-  until not RegexpOperators.ExecNext;
+    operatorsStr := operatorsStr + regexpOperators.Match[0];
+  until not regexpOperators.ExecNext;
 
-  CountNumbers := Length(OperatorsStr) + 1;
-  SetLength(ArrNumbers, CountNumbers);
+  countNumbers := Length(OperatorsStr) + 1;
+  setLength(ArrNumbers, CountNumbers);
 
-  RegexpNumbers := TRegExpr.Create;
-  RegexpNumbers.Expression := '[0-9,]+';
+  regexpNumbers := TRegExpr.Create;
+  regexpNumbers.Expression := '[0-9,]+';
 
-  Id := 0;
-  if RegexpNumbers.Exec(DigitsAndOperations) then
+  id := 0;
+  if regexpNumbers.Exec(digitsAndOperations) then
   repeat
-    ArrNumbers[Id] := StrToFloat(RegexpNumbers.Match[0]);
-    Id := Id + 1;
-  until not RegexpNumbers.ExecNext;
+    arrNumbers[Id] := StrToFloat(regexpNumbers.Match[0]);
+    id := id + 1;
+  until not regexpNumbers.ExecNext;
 
-  ValueResult := ArrNumbers[0];
-  if Length(OperatorsStr) > 0 then
+  valueResult := arrNumbers[0];
+  if Length(operatorsStr) > 0 then
     for Id := 0 to (Length(ArrNumbers) - 1) do
     begin
-      case OperatorsStr[Id+1] of
-      '+': ValueResult := ValueResult + ArrNumbers[Id + 1];
-      '-': ValueResult := ValueResult - ArrNumbers[Id + 1];
-      '*': ValueResult := ValueResult * ArrNumbers[Id + 1];
-      '/': ValueResult := ValueResult / ArrNumbers[Id + 1];
+      case operatorsStr[id+1] of
+      '+': ValueResult := ValueResult + ArrNumbers[id + 1];
+      '-': ValueResult := ValueResult - ArrNumbers[id + 1];
+      '*': ValueResult := ValueResult * ArrNumbers[id + 1];
+      '/': ValueResult := ValueResult / ArrNumbers[id + 1];
       end;
     end;
 
-  LabelInfo.Caption := FloatToStr(ValueResult);
+  LabelInfo.Caption := FloatToStr(valueResult);
 end;
 
 procedure TFormCalculator.ChangeLabelsTextsByDigits(Symbol: Integer);
@@ -215,6 +215,10 @@ begin
   if LabelInfo.Caption = IntToStr(0) then
   begin
     LabelInfo.Caption := '';
+    if LabelActions.Caption = IntToStr(0) then
+    begin
+      LabelActions.Caption := IntToStr(0);
+    end;
   end;
 
   LabelInfo.Caption := LabelInfo.Caption + IntToStr(Symbol);
@@ -223,7 +227,7 @@ end;
 
 procedure TFormCalculator.ChangeLabelsTextsByOperationSymbols(Symbol: String);
 begin
-  if LabelInfo.Caption = IntToStr(0) then
+  if (LabelActions.Caption = '') and (LabelInfo.Caption = IntToStr(0)) then
   begin
     LabelActions.Caption := IntToStr(0);
   end;
